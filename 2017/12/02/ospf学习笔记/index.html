@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="computer network," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="ospf 概述ospf是域内链路状态协议的代表。适用于大型企业网络，校园网络。核心思想是通过划域的方式，进行层次化管理。  在每个area域内通过 flooding 的方式同步链路状态数据库LSDB，在 area 域内运行 Dijkstra最短路径算法，找到域内最短路 在 area 之间，则退回传统的距离向量协议；通过">
+<meta name="keywords" content="computer network">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ospf 学习笔记">
+<meta property="og:url" content="http://yoursite.com/2017/12/02/ospf学习笔记/index.html">
+<meta property="og:site_name" content="dwy&#39;s blog">
+<meta property="og:description" content="ospf 概述ospf是域内链路状态协议的代表。适用于大型企业网络，校园网络。核心思想是通过划域的方式，进行层次化管理。  在每个area域内通过 flooding 的方式同步链路状态数据库LSDB，在 area 域内运行 Dijkstra最短路径算法，找到域内最短路 在 area 之间，则退回传统的距离向量协议；通过骨干区域 Area0的方式，形成没有环树形拓扑，避免路径向量协议固有的路由循环、">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-12-02T01:32:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ospf 学习笔记">
+<meta name="twitter:description" content="ospf 概述ospf是域内链路状态协议的代表。适用于大型企业网络，校园网络。核心思想是通过划域的方式，进行层次化管理。  在每个area域内通过 flooding 的方式同步链路状态数据库LSDB，在 area 域内运行 Dijkstra最短路径算法，找到域内最短路 在 area 之间，则退回传统的距离向量协议；通过骨干区域 Area0的方式，形成没有环树形拓扑，避免路径向量协议固有的路由循环、">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/02/ospf学习笔记/"/>
+
+
+
+
+
+  <title>ospf 学习笔记 | dwy's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dwy's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">努力做好一条乖巧的小腿毛</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/ospf学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ospf 学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-02T09:22:46+08:00">
+                2017-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-network/" itemprop="url" rel="index">
+                    <span itemprop="name">computer network</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="ospf-概述"><a href="#ospf-概述" class="headerlink" title="ospf 概述"></a>ospf 概述</h2><p>ospf是域内链路状态协议的代表。适用于大型企业网络，校园网络。核心思想是通过划域的方式，进行层次化管理。</p>
+<ul>
+<li>在每个area域内通过 flooding 的方式同步链路状态数据库LSDB，在 area 域内运行 Dijkstra最短路径算法，找到域内最短路</li>
+<li>在 area 之间，则退回传统的距离向量协议；通过骨干区域 Area0的方式，形成没有环树形拓扑，避免路径向量协议固有的路由循环、无穷技术等问题</li>
+</ul>
+<h2 id="ospf-层次化和路由器分类"><a href="#ospf-层次化和路由器分类" class="headerlink" title="ospf 层次化和路由器分类"></a>ospf 层次化和路由器分类</h2><h3 id="ospf-网络层次化"><a href="#ospf-网络层次化" class="headerlink" title="ospf 网络层次化"></a>ospf 网络层次化</h3><p>把一个 AS 分割为多个区域(area)</p>
+<ul>
+<li>必须有骨干区域backbone area，用区域 ID 0 标识（0.0.0.0）</li>
+<li>其他 Area 都连接到 Area0；如果物理上没有相连，则通过 Virtual Link 来逻辑上相连</li>
+<li>链路具体信息洪泛和 Dijkstra 计算只在区域内；区域间只使用总结后的信息</li>
+</ul>
+<h3 id="ospf-路由器分类"><a href="#ospf-路由器分类" class="headerlink" title="ospf 路由器分类"></a>ospf 路由器分类</h3><ul>
+<li>骨干路由器 Core Router<ul>
+<li>区域0中</li>
+</ul>
+</li>
+<li>内部路由器 Internal Routers<ul>
+<li>其他 Area 中</li>
+</ul>
+</li>
+<li>区域边界路由器 <strong>Area-Border Routers ABR</strong>：<ul>
+<li>位于骨干区域和低级 low-level 区域之间，连接骨干区域和每个低级区域</li>
+<li>也被看做骨干路由器</li>
+</ul>
+</li>
+<li>AS 边界路由器 <strong>AS Boundary Routers ASBR</strong>：<ul>
+<li>区域0中连接其他 AS 的路由器。必须能处理域间路由协议，如 BGP</li>
+</ul>
+</li>
+</ul>
+<h2 id="网络类型"><a href="#网络类型" class="headerlink" title="网络类型"></a>网络类型</h2><p>ospf 定义网络类型是为了规范在不同网络类型之上，协议具体如何工作。主要有五类网络：</p>
+<ol>
+<li>点到点网络</li>
+<li>广播网络（如以太网）</li>
+<li>非广播多路访问子网 NBMA（如 X.25，帧中继，ATM）</li>
+<li>点到多点子网</li>
+<li>虚拟链路 Virtual Link</li>
+</ol>
+<p>需重点掌握<strong><u>点到点网络</u></strong>与<u><strong>广播网络</strong></u>。</p>
+<ul>
+<li>点到点网络<ul>
+<li>通过光纤直接连，一个路由器可以连接多个点到点网络</li>
+<li>通常用在 ospf 域分布于较大的地理范围时</li>
+<li>把这个点到点网络的链路状态信息放如 router-LSA（link state advertise链路状态通告）中</li>
+</ul>
+</li>
+<li>广播子网<ul>
+<li>指类似使用以太网技术连接的局域网，通过广播 broadcasting 来交流</li>
+<li>广播网络是多路访问的 multiaccess，一个数据包能被其他所有路由器收到</li>
+<li>选择一个路由器作为<strong>指派路由器 Designated Router，DR</strong></li>
+<li>选择另一个作为<strong>备份指派路由器 Backup Designated Router，BDR</strong></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>DR和BDR的作用</p>
+<ol>
+<li>LSA 更新和洪泛：通过选举 BR 和 BDR，将 n*(n-1)/2对邻居关系，简化为 n 对邻居关系</li>
+<li>子网内的更新通过DR发布出去，对外的子网描述由 DR 负责</li>
+<li>更新的 LAS 先发给 DR（AllDRouters 224.0.0.6），然后 DR 再转发给其他路由器（AllSPFRouters 224.0.0.5）</li>
+</ol>
+</blockquote>
+<h2 id="协议过程"><a href="#协议过程" class="headerlink" title="协议过程"></a>协议过程</h2><h3 id="Hello-子协议"><a href="#Hello-子协议" class="headerlink" title="Hello 子协议"></a>Hello 子协议</h3><blockquote>
+<p>邻居路由器的发现与保持，建立邻接关系</p>
+<p>广播型网络进行 DR 和 BDR 的选举</p>
+</blockquote>
+<ul>
+<li>初始化/激活<ul>
+<li>周期性发出 Hello 报文，进行邻居发现和参数协商（如时间间隔），建立邻接关系 adjacency</li>
+<li>如果邻居发的 Hello 里也罢自己列为邻居，则认为链路是双向的 Two-way，否则认为是失效链路不纳入计算</li>
+<li>广播网络里利用 hello 协议进行 DR 和 BDR 的选举，DR 和 BDR 对外邻接</li>
+</ul>
+</li>
+<li>keep alive<ul>
+<li>路由器每隔10秒（缺省值，可设置）向所有接口发送一个 Hello 分组；目的地址采用 IP 组播地址 AllSPFRouters（224.0.0.5）</li>
+<li>如果在 dead interval（缺省值40s，可设置）没有收到来自其邻居的 Hello 分组，则认为邻居不再有效</li>
+</ul>
+</li>
+</ul>
+<h3 id="LSDB-同步"><a href="#LSDB-同步" class="headerlink" title="LSDB 同步"></a>LSDB 同步</h3><ul>
+<li>一旦 Hello 协议确定邻居间的邻接关系，就需互相了解对方的 LSDB，以便同步</li>
+<li>邻居之间交互 DD 分组，只含 LSA 头部信息（以便路由器知道邻居的那些 LSA 事自己没有的，或者新于自己的）</li>
+<li><strong>由谁控制 同步过程，运行协商 slave 和 master</strong>：具有较高的 Router ID 的为 Master</li>
+<li>如果对方有新 LSA，则通过 LSR 获取，对方通过 LSU 回复，对收到的 LSA 进行确认可发 LSAck</li>
+</ul>
+<p><strong>OSPF 邻居状态机的状态</strong></p>
+<p>每个 ospf 路由器都有一张邻居表，来维护与其他路由的通信状态：</p>
+<ol>
+<li>Down State：没有收到 hello （或对方 Dead，回到此状态）</li>
+<li>Init State：收到 Hello，但是在邻居表里不带有本路由器的 RouterID（对方还不知道我，即对方在收到我的 hello 前发的 hello）</li>
+<li>Two-way State：收到 Hello，并且带有本路由器的 RouterID（对方知道我了）。此时进行 DR 选举，如果不需要 DR 选举，则进入 ExStart State<ol>
+<li>DR 选举：选 RouterID 大的</li>
+<li>然后各路由器与 DR 和 BDR 的邻居状态进入 ExStart State（有 DR 与本子网内路由器交互信息，大家与 DR 交互获得 LSA）</li>
+<li>与其他路由器 DROTHERS 之间的邻居状态保持在 Two-State（以便 keep alive）</li>
+</ol>
+</li>
+<li>ExStart：决定 Master/Slave，确定 DD 的 Sequence Number</li>
+<li>Exchange：路由器之间交换 DD</li>
+<li>Loading：如果对方有新 LSA，则请求和获取、确认</li>
+<li>Full Adjacency：LSDB 同步了</li>
+</ol>
+<h3 id="洪泛"><a href="#洪泛" class="headerlink" title="洪泛"></a>洪泛</h3><ul>
+<li>进入 Full 状态后收到新的 LSA（或自我 LSA 的更新）需要通过 LSU 报文洪泛</li>
+<li>LSU 只包含1个或多个 LSA，只有 age和序号检查不过期的 LSA 才会被洪泛</li>
+<li>洪泛必须要可靠，即确认和重传<ul>
+<li>OSPF 基于 IP 之上，因此需要自己的可靠机制</li>
+<li>显示 explicit 确认：接收路由器在收到 LSU 是发回 LSAck</li>
+<li>隐式 implicit 确认：收到 LSU 后在相同的接口上发送重复的 LSA 回去</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>点到点网络中没法送 LSA 更新到组播地址224.0.0.5AllSPFRouters</li>
+<li>广播网络中，非 DR 和非 BDR 路由器发送 LSA 到组播地址224.0.0.6（AllDRouters），DR 和 BDR 发送LSA 到224.0.0.5（含本子网）</li>
+</ul>
+<ul>
+<li>ospf 定义了3个关于 LSA 洪泛的参数<ul>
+<li>洪泛不能太快，也不能太慢</li>
+<li>LSRefreshTime（30 min）刷新 LSA 产生的最大时间间隔，即超时不更新就 out 了</li>
+<li>MinLSIntervel（5 sec）任何特定 LSA 产生的最小时间间隔，即<strong>不能马上发要等一下再发出</strong>，否则影响网络稳定</li>
+<li>MinLSArrival（1 sec）接收新 LSA 的最小时间（作为 hold-down 时钟），太频繁了不接受</li>
+</ul>
+</li>
+</ul>
+<h2 id="分组类型和格式"><a href="#分组类型和格式" class="headerlink" title="分组类型和格式"></a>分组类型和格式</h2><p><strong>osfp 有五种分组类型：</strong></p>
+<ol>
+<li>Hello 分组</li>
+<li>数据库描述分组 DD（Database Description）</li>
+<li>链路状态请求分组 LSR（Link State Request）</li>
+<li>链路状态更新分组 LSU（Link State Update）</li>
+<li>链路状态确认分组 LSAck（Link State Acknowledge）</li>
+</ol>
+<p><strong>ospf 报文格式：</strong></p>
+<p>位于 IP 之上；TTL=1；协议号=89（ospf）；目的 IP 课设为邻居路由器的 IP 地址或者 OSPF 足有地址 ALLSPFRouter 或者 ALLDRouter；type 有上述五种</p>
+<h2 id="LSA-的链路状态类型和格式"><a href="#LSA-的链路状态类型和格式" class="headerlink" title="LSA 的链路状态类型和格式"></a>LSA 的链路状态类型和格式</h2><p>LSA 常用的 LS 类型</p>
+<ol>
+<li>router-LSA</li>
+<li>network-LSA</li>
+<li>network-summery-LSA</li>
+<li>ASBR-summary-LSA</li>
+<li>AS-external-LSA</li>
+</ol>
+<h2 id="等价多路径-ECMP"><a href="#等价多路径-ECMP" class="headerlink" title="等价多路径 ECMP"></a>等价多路径 ECMP</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/computer-network/" rel="tag"># computer network</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/02/Mac环境下hadoop-eclipse开发环境的搭建/" rel="next" title="Mac环境下hadoop+eclipse开发环境的搭建">
+                <i class="fa fa-chevron-left"></i> Mac环境下hadoop+eclipse开发环境的搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/02/knn/" rel="prev" title="machine learning in action - knn">
+                machine learning in action - knn <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="dwy" />
+            
+              <p class="site-author-name" itemprop="name">dwy</p>
+              <p class="site-description motion-element" itemprop="description">smile every day</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ospf-概述"><span class="nav-number">1.</span> <span class="nav-text">ospf 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ospf-层次化和路由器分类"><span class="nav-number">2.</span> <span class="nav-text">ospf 层次化和路由器分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ospf-网络层次化"><span class="nav-number">2.1.</span> <span class="nav-text">ospf 网络层次化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ospf-路由器分类"><span class="nav-number">2.2.</span> <span class="nav-text">ospf 路由器分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络类型"><span class="nav-number">3.</span> <span class="nav-text">网络类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协议过程"><span class="nav-number">4.</span> <span class="nav-text">协议过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hello-子协议"><span class="nav-number">4.1.</span> <span class="nav-text">Hello 子协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSDB-同步"><span class="nav-number">4.2.</span> <span class="nav-text">LSDB 同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#洪泛"><span class="nav-number">4.3.</span> <span class="nav-text">洪泛</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分组类型和格式"><span class="nav-number">5.</span> <span class="nav-text">分组类型和格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSA-的链路状态类型和格式"><span class="nav-number">6.</span> <span class="nav-text">LSA 的链路状态类型和格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#等价多路径-ECMP"><span class="nav-number">7.</span> <span class="nav-text">等价多路径 ECMP</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dwy</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

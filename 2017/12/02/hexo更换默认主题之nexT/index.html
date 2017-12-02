@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="hexo," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="刚刚搭建好个人博客是不是炒鸡开心捏◉‿◉ 然而默认的theme好像有一丢丢丑捏，可以把它换掉咩？当然可以啦(*≧ω≦) hexo主题选择百度一下可以搜到很多好看的主题呢，挑自己喜欢的style就好 懒人党可以click here 宝宝选的是nexT这个主题，感觉蛮干净清爽的 nexT主题安装非常简单，按照git里面的步">
+<meta name="keywords" content="hexo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo更换默认主题之nexT">
+<meta property="og:url" content="http://yoursite.com/2017/12/02/hexo更换默认主题之nexT/index.html">
+<meta property="og:site_name" content="dwy&#39;s blog">
+<meta property="og:description" content="刚刚搭建好个人博客是不是炒鸡开心捏◉‿◉ 然而默认的theme好像有一丢丢丑捏，可以把它换掉咩？当然可以啦(*≧ω≦) hexo主题选择百度一下可以搜到很多好看的主题呢，挑自己喜欢的style就好 懒人党可以click here 宝宝选的是nexT这个主题，感觉蛮干净清爽的 nexT主题安装非常简单，按照git里面的步骤，照着敲就好啦！别的主题的步骤也都是这样的。 这边给一个比较详细的文档，宝宝就">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-12-02T01:18:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo更换默认主题之nexT">
+<meta name="twitter:description" content="刚刚搭建好个人博客是不是炒鸡开心捏◉‿◉ 然而默认的theme好像有一丢丢丑捏，可以把它换掉咩？当然可以啦(*≧ω≦) hexo主题选择百度一下可以搜到很多好看的主题呢，挑自己喜欢的style就好 懒人党可以click here 宝宝选的是nexT这个主题，感觉蛮干净清爽的 nexT主题安装非常简单，按照git里面的步骤，照着敲就好啦！别的主题的步骤也都是这样的。 这边给一个比较详细的文档，宝宝就">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/02/hexo更换默认主题之nexT/"/>
+
+
+
+
+
+  <title>hexo更换默认主题之nexT | dwy's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dwy's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">努力做好一条乖巧的小腿毛</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/hexo更换默认主题之nexT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">hexo更换默认主题之nexT</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-02T09:17:07+08:00">
+                2017-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>刚刚搭建好个人博客是不是炒鸡开心捏◉‿◉</p>
+<p>然而默认的theme好像有一丢丢丑捏，可以把它换掉咩？当然可以啦(*≧ω≦)</p>
+<h2 id="hexo主题选择"><a href="#hexo主题选择" class="headerlink" title="hexo主题选择"></a>hexo主题选择</h2><p>百度一下可以搜到很多好看的主题呢，挑自己喜欢的style就好</p>
+<p>懒人党可以<a href="http://www.jianshu.com/p/b6c694c2e58e" target="_blank" rel="noopener">click here</a></p>
+<p>宝宝选的是nexT这个主题，感觉蛮干净清爽的</p>
+<h2 id="nexT主题安装"><a href="#nexT主题安装" class="headerlink" title="nexT主题安装"></a>nexT主题安装</h2><p>非常简单，按照git里面的步骤，照着敲就好啦！别的主题的步骤也都是这样的。</p>
+<p>这边给一个比较详细的文档，宝宝就是照着这个敲的<a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">click here</a></p>
+<p>Hexo 安装主题的方式非常简单，只需要将主题文件拷贝至站点目录的 themes 目录下， 然后修改下配置文件即可。具体到 NexT 来说，安装步骤如下。</p>
+<h3 id="下载主题"><a href="#下载主题" class="headerlink" title="下载主题"></a>下载主题</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> your-hexo-site</span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
+<p>之后的更新可以通过 git pull 来快速更新</p>
+<h3 id="启用主题"><a href="#启用主题" class="headerlink" title="启用主题"></a>启用主题</h3><p>与所有 Hexo 主题启用的模式一样。 当下载完成后，打开<code>your-hexo-site</code>目录下面的<code>_config.yml</code>文件， 找到 theme 字段，并将其值更改为 next</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure>
+<h3 id="验证主题"><a href="#验证主题" class="headerlink" title="验证主题"></a>验证主题</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>用浏览器打开<code>localhost:4000</code>，就可以看到新主题啦 (⁎⁍̴̛ᴗ⁍̴̛⁎)</p>
+<h3 id="修改主题的一些设定"><a href="#修改主题的一些设定" class="headerlink" title="修改主题的一些设定"></a>修改主题的一些设定</h3><p>按自己的需求改，怎么美怎么改，前面的文档非常详细。</p>
+<p>配置文件的路径 <code>your-hexo-site/theme/next/_config.yml</code></p>
+<p>宝宝就列一下自己改的：</p>
+<h4 id="设置Scheme"><a href="#设置Scheme" class="headerlink" title="设置Scheme"></a>设置Scheme</h4><p>有三种scheme可以挑</p>
+<ul>
+<li>Muse - 默认 Scheme，这是 NexT 最初的版本，黑白主调，大量留白</li>
+<li>Mist - Muse 的紧凑版本，整洁有序的单栏外观</li>
+<li>Pisces - 双栏 Scheme，小家碧玉似的清新</li>
+</ul>
+<p>宝宝用的是Pisces，觉得这个更舒服一点</p>
+<h4 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h4><ul>
+<li>找一张美美的照片存下来</li>
+<li>保存到<code>your-hexo-site/theme/next/source/images</code>文件夹下</li>
+<li>修改头像文件名为avatar.png （不改也可以，配置文件中名字能对起来就好）</li>
+<li>修改之前的主题的配置文件<code>your-hexo-site/theme/next/_config.yml</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">avatar: /images/avatar.png</span><br></pre></td></tr></table></figure>
+<h4 id="设置manu"><a href="#设置manu" class="headerlink" title="设置manu"></a>设置manu</h4><p>menu就是侧边的菜单栏，可以按照自己想要的进行设置</p>
+<ul>
+<li>home: 首页</li>
+<li>archives: 归档</li>
+<li>categories: 分类</li>
+<li>tags: 标签</li>
+<li>about: 关于</li>
+<li>search: 搜索</li>
+<li>commonweal: 公益404</li>
+<li>something: 有料</li>
+</ul>
+<p>宝宝设置了 home archives tags categories 这四项</p>
+<p>具体设置也是配置那个主题配置文件中的menu选项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: /</span><br><span class="line">  archives: /archives</span><br><span class="line">  #about: /about</span><br><span class="line">  categories: /categories</span><br><span class="line">  tags: /tags</span><br><span class="line">  #commonweal: /404.html</span><br></pre></td></tr></table></figure>
+<p>home archives 设置完了非常的完美，没有什么问题</p>
+<h3 id="tags-和-categories出现404"><a href="#tags-和-categories出现404" class="headerlink" title="tags 和 categories出现404"></a>tags 和 categories出现404</h3><p><strong>tags 和 categories可能会出现404</strong>，要稍微调整一下下 <a href="http://theme-next.iissnan.com/theme-settings.html#tags-page" target="_blank" rel="noopener">参考这边可以完美解决</a></p>
+<p>写博客果然好考验耐心，宝宝就不粘贴上面文档的解决方案了，大家自己点进去哦 (*≧ω≦)</p>
+<h3 id="开启评论功能"><a href="#开启评论功能" class="headerlink" title="开启评论功能"></a>开启评论功能</h3><p><a href="http://theme-next.iissnan.com/getting-started.html#comment-system-duoshuo" target="_blank" rel="noopener">here</a> 这里是解决方案</p>
+<p>nexT集成了duoshuo第三方服务，<a href="http://duoshuo.com/" target="_blank" rel="noopener"> duoshuo传送门</a></p>
+<p>进到多说的主页，点击我要安装，填完注册信息后，把第三行多说域名框框里面的内容，填到配置文件里面就可以啦</p>
+<h3 id="开启阅读量统计功能"><a href="#开启阅读量统计功能" class="headerlink" title="开启阅读量统计功能"></a>开启阅读量统计功能</h3><p><a href="https://notes.wanghao.work/2015-10-21-%E4%B8%BANexT%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E9%87%8F%E7%BB%9F%E8%AE%A1%E5%8A%9F%E8%83%BD.html#%E9%85%8D%E7%BD%AELeanCloud" target="_blank" rel="noopener">here</a><br>完美解决</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>宝宝就改了这些配置，以后改了别的配置的话再慢慢补充。</p>
+<p>至少现在相对来说已经美美哒了呢，有兴趣的宝宝可以自己折腾，有比较好用的功能，欢迎留言给我哟，么么哒 ʕ •ᴥ•ʔ</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hexo/" rel="tag"># hexo</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/02/hello-world/" rel="next" title="hello-world">
+                <i class="fa fa-chevron-left"></i> hello-world
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/02/Mac环境下hadoop-eclipse开发环境的搭建/" rel="prev" title="Mac环境下hadoop+eclipse开发环境的搭建">
+                Mac环境下hadoop+eclipse开发环境的搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="dwy" />
+            
+              <p class="site-author-name" itemprop="name">dwy</p>
+              <p class="site-description motion-element" itemprop="description">smile every day</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo主题选择"><span class="nav-number">1.</span> <span class="nav-text">hexo主题选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nexT主题安装"><span class="nav-number">2.</span> <span class="nav-text">nexT主题安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载主题"><span class="nav-number">2.1.</span> <span class="nav-text">下载主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启用主题"><span class="nav-number">2.2.</span> <span class="nav-text">启用主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证主题"><span class="nav-number">2.3.</span> <span class="nav-text">验证主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改主题的一些设定"><span class="nav-number">2.4.</span> <span class="nav-text">修改主题的一些设定</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设置Scheme"><span class="nav-number">2.4.1.</span> <span class="nav-text">设置Scheme</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置头像"><span class="nav-number">2.4.2.</span> <span class="nav-text">设置头像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置manu"><span class="nav-number">2.4.3.</span> <span class="nav-text">设置manu</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tags-和-categories出现404"><span class="nav-number">2.5.</span> <span class="nav-text">tags 和 categories出现404</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启评论功能"><span class="nav-number">2.6.</span> <span class="nav-text">开启评论功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启阅读量统计功能"><span class="nav-number">2.7.</span> <span class="nav-text">开启阅读量统计功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dwy</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
