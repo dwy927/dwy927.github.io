@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="hadoop," />
+  <meta name="keywords" content="machine learning," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Hadoop伪分布模式的搭建因为要做毕设，所以要在自己的电脑上搭建一个Hadoop的开发环境 我主要参考了以下博客，click here 完成了快速搭建 Hadoop+eclipse的开发环境搭建下载插件下载地址 插件安装把hadoop-eclipse-plugin-2.6.0.jar这个插件下载下来 放到以下目录下/">
-<meta name="keywords" content="hadoop">
+<meta name="description" content="数据集中常包含复杂的相互关系，使得输入数据和目标变量之间呈现非线性关系，很难使用全局线性模型来拟合。 一种可行的方式是，将数据集切分成很多分容易建模的数据，然后利用线性回归技术来建模。如果切分后仍难以拟合线性模型就继续切分。这就是树回归的思想：用树形结构对复杂数据进行切分，然后用线性回归的方法在叶子节点进行预测。 ID">
+<meta name="keywords" content="machine learning">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mac环境下hadoop+eclipse开发环境的搭建">
-<meta property="og:url" content="http://yoursite.com/2017/12/02/Mac环境下hadoop-eclipse开发环境的搭建/index.html">
+<meta property="og:title" content="mechine learning in action - tree regression 树回归">
+<meta property="og:url" content="http://yoursite.com/2017/12/06/mechine-learning-in-action-tree-regression-树回归/index.html">
 <meta property="og:site_name" content="dwy&#39;s blog">
-<meta property="og:description" content="Hadoop伪分布模式的搭建因为要做毕设，所以要在自己的电脑上搭建一个Hadoop的开发环境 我主要参考了以下博客，click here 完成了快速搭建 Hadoop+eclipse的开发环境搭建下载插件下载地址 插件安装把hadoop-eclipse-plugin-2.6.0.jar这个插件下载下来 放到以下目录下/Applications/Eclipse.app/Contents/Eclips">
+<meta property="og:description" content="数据集中常包含复杂的相互关系，使得输入数据和目标变量之间呈现非线性关系，很难使用全局线性模型来拟合。 一种可行的方式是，将数据集切分成很多分容易建模的数据，然后利用线性回归技术来建模。如果切分后仍难以拟合线性模型就继续切分。这就是树回归的思想：用树形结构对复杂数据进行切分，然后用线性回归的方法在叶子节点进行预测。 ID3算法复习 在决策树中曾介绍过 ID3算法，其做法是每次选取当前最佳的特征来分割">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-12-02T01:22:21.000Z">
+<meta property="og:updated_time" content="2017-12-07T11:41:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mac环境下hadoop+eclipse开发环境的搭建">
-<meta name="twitter:description" content="Hadoop伪分布模式的搭建因为要做毕设，所以要在自己的电脑上搭建一个Hadoop的开发环境 我主要参考了以下博客，click here 完成了快速搭建 Hadoop+eclipse的开发环境搭建下载插件下载地址 插件安装把hadoop-eclipse-plugin-2.6.0.jar这个插件下载下来 放到以下目录下/Applications/Eclipse.app/Contents/Eclips">
+<meta name="twitter:title" content="mechine learning in action - tree regression 树回归">
+<meta name="twitter:description" content="数据集中常包含复杂的相互关系，使得输入数据和目标变量之间呈现非线性关系，很难使用全局线性模型来拟合。 一种可行的方式是，将数据集切分成很多分容易建模的数据，然后利用线性回归技术来建模。如果切分后仍难以拟合线性模型就继续切分。这就是树回归的思想：用树形结构对复杂数据进行切分，然后用线性回归的方法在叶子节点进行预测。 ID3算法复习 在决策树中曾介绍过 ID3算法，其做法是每次选取当前最佳的特征来分割">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/02/Mac环境下hadoop-eclipse开发环境的搭建/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/06/mechine-learning-in-action-tree-regression-树回归/"/>
 
 
 
 
 
-  <title>Mac环境下hadoop+eclipse开发环境的搭建 | dwy's blog</title>
+  <title>mechine learning in action - tree regression 树回归 | dwy's blog</title>
   
 
 
@@ -253,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/Mac环境下hadoop-eclipse开发环境的搭建/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/mechine-learning-in-action-tree-regression-树回归/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="dwy">
@@ -270,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Mac环境下hadoop+eclipse开发环境的搭建</h1>
+          <h1 class="post-title" itemprop="name headline">mechine learning in action - tree regression 树回归</h1>
         
 
         <div class="post-meta">
@@ -282,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-02T09:21:11+08:00">
-                2017-12-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-06T11:03:04+08:00">
+                2017-12-06
               </time>
             
 
@@ -305,8 +305,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
                   </a>
                 </span>
 
@@ -342,20 +342,49 @@
       
 
       
-        <h2 id="Hadoop伪分布模式的搭建"><a href="#Hadoop伪分布模式的搭建" class="headerlink" title="Hadoop伪分布模式的搭建"></a>Hadoop伪分布模式的搭建</h2><p>因为要做毕设，所以要在自己的电脑上搭建一个Hadoop的开发环境</p>
-<p>我主要参考了以下博客，<a href="http://www.cnblogs.com/micrari/p/5716851.html" target="_blank" rel="noopener">click here</a> 完成了快速搭建</p>
-<h2 id="Hadoop-eclipse的开发环境搭建"><a href="#Hadoop-eclipse的开发环境搭建" class="headerlink" title="Hadoop+eclipse的开发环境搭建"></a>Hadoop+eclipse的开发环境搭建</h2><h3 id="下载插件"><a href="#下载插件" class="headerlink" title="下载插件"></a>下载插件</h3><p><a href="https://github.com/winghc/hadoop2x-eclipse-plugin/tree/master/release" target="_blank" rel="noopener">下载地址</a></p>
-<h3 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h3><p>把<code>hadoop-eclipse-plugin-2.6.0.jar</code>这个插件下载下来</p>
-<p>放到以下目录下<code>/Applications/Eclipse.app/Contents/Eclipse/plugins</code></p>
-<p>以上目录有可能不一样，只要找到eclipse的安装目录的<code>plugins</code>目录即可</p>
-<p>然后重新打开eclipse即可</p>
-<h3 id="遇到的一个小坑坑"><a href="#遇到的一个小坑坑" class="headerlink" title="遇到的一个小坑坑"></a>遇到的一个小坑坑</h3><p>我重启eclipse发现什么都没有变化，好像eclipse插件没有起到任何作用。</p>
-<p>一直以为会不会是hadoop版本和插件版本不一致所造成的</p>
-<p>最后发现：是因为之前启动过eclipse，然后下次启动好像会从历史记录中加载，而不检查有没有新的的插件被安装。</p>
-<p>解决：<br>把存历史记录的那个目录删掉。启动的时候找不到历史记录，就会全部重新加载拉～～～～删掉没有关系啦，启动会自动生成的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Applications/Eclipse.app/Contents/Eclipse/configuration</span><br><span class="line">$ ls</span><br><span class="line">config.ini                             org.eclipse.e4.ui.css.swt.theme        org.eclipse.equinox.simpleconfigurator org.eclipse.osgi                       org.eclipse.update</span><br><span class="line">org.eclipse.core.runtime               org.eclipse.equinox.app                org.eclipse.oomph.setup                org.eclipse.ui.intro.universal</span><br><span class="line">$ rm -r org.eclipse.update/</span><br></pre></td></tr></table></figure>
-<h3 id="一些配置"><a href="#一些配置" class="headerlink" title="一些配置"></a>一些配置</h3><p><a href="http://blog.csdn.net/antgan/article/details/52068161" target="_blank" rel="noopener">参考这里</a> </p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我也不太懂呀，记录一下自己的搭建过程，可以方便以后寄几看～～～</p>
+        <p>数据集中常包含复杂的相互关系，使得输入数据和目标变量之间呈现非线性关系，很难使用全局线性模型来拟合。</p>
+<p>一种可行的方式是，将数据集切分成很多分容易建模的数据，然后利用线性回归技术来建模。如果切分后仍难以拟合线性模型就继续切分。这就是<strong>树回归的思想</strong>：用树形结构对复杂数据进行切分，然后用线性回归的方法在叶子节点进行预测。</p>
+<p><strong>ID3算法复习</strong></p>
+<p>在决策树中曾介绍过 ID3算法，其做法是每次选取当前最佳的特征来分割数据。并按照该特征所有可能的取值来切分。也就是说，如果一个特征有四种取值的话，那数据就会被切成四份。一旦按某个特征切分后，该特征在之后的算法执行过程中，将不再起作用，也就是说被消耗掉了。</p>
+<p>ID3存在的问题：</p>
+<ul>
+<li>有观点认为，这种切分方式过于迅速</li>
+<li>不能处理连续型数据。只有事先将连续型特征转换成离散型，才能使用 ID3算法</li>
+</ul>
+<p><strong>CART算法</strong></p>
+<p><strong>CART 使用二元切分</strong>来处理连续型变量。具体的处理方法是：如果特征值大于给定值，就走左子树；否则走右子树。</p>
+<p>对 CART 算法稍作修改，就能处理回归问题。在决策树中曾介绍采用香农熵来度量集合的无序程度。如果选用其他方式来代替香农熵，就可以使用树构建算法来完成回归。</p>
+<p><strong>有两种树结构：</strong></p>
+<ul>
+<li>回归树regression tree：每个叶节点包含单个值</li>
+<li>模型树model tree：每个叶节点包含一个线性方程</li>
+</ul>
+<h2 id="回归树"><a href="#回归树" class="headerlink" title="回归树"></a>回归树</h2><p><strong>如何计算连续型数值的混乱度：</strong></p>
+<p>有一种简单的方式：首先计算所有数据的均值，然后计算每条数据的值到均值的差值。为了正负同等看待，用绝对值或者平方值来代替上述差值，然后求和。即数据集的均方差*数据集样本的总个数</p>
+<p><strong>树剪枝技术：</strong></p>
+<p>一颗树如果节点过多，表明该节点可能对数据进行了过拟合。那么，<strong>如何判断是否发生了过拟合？</strong>可以采用交叉验证的方式来发现</p>
+<p>通过降低决策树的复杂度来避免过拟合的过程称为<strong>剪枝 pruning</strong>，剪枝分为两种，预剪枝和后剪枝</p>
+<ul>
+<li><strong>预剪枝prepruning</strong>：需要用户指定参数，在树的构建过程中就剪枝<ul>
+<li>预剪枝的问题在：有时用户常常不确定到底要什么样的效果来设定参数</li>
+<li>使用预剪枝的方法是：在建树时，就设定一些剪枝条件，提前结束递归建树的过程</li>
+</ul>
+</li>
+<li><strong>后剪枝postpruning</strong>：不需要用户指定参数，利用测试集，在树构建完毕后再进行剪枝<ul>
+<li>后剪枝的问题在：效率没有预剪枝高</li>
+<li>使用后剪枝的方法是：将数据集分成测试集和训练集，使得构建出的树足够大，足够复杂，便于剪枝。接下来，从上而下找到叶子节点，用测试集来判断这些叶节点的合并是否能降低测试误差</li>
+</ul>
+</li>
+<li>一般为了寻求最佳模型效果，可以同时使用两种剪枝技术</li>
+</ul>
+<p><strong>进一步明确<u>后剪枝</u>的方法：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">基于已有的树切分测试数据：</span><br><span class="line">	如果存在任意一子集是一颗树，就在该子集上递归剪枝过程</span><br><span class="line">	计算当前两叶子节点合并后的误差</span><br><span class="line">	计算不合并的误差</span><br><span class="line">	如果合并会降低误差的话，就将叶节点合并</span><br></pre></td></tr></table></figure>
+<h2 id="模型树"><a href="#模型树" class="headerlink" title="模型树"></a>模型树</h2><p>用树来对数据建模，除了把叶节点简单的设定为常数值之外，还有一种方法是把叶节点设定为分段线性函数。</p>
+<p>这里所谓的分段线性函数是指模型由多个线性片段组成。模型树的可解释性是它由于回归树的特点之一。</p>
+<p><strong>为了找最佳切分，怎么计算误差？</strong></p>
+<p>与回归树不同，对于给定数据，应该先用线性模型对他进行拟合，然后计算真实的目标值与模型预测值之间的差值。最后将这些差值的平方求和就得到了所需的误差</p>
+<p><strong>如何评价模型树、回归树、线性回归及岭回归、Lasso 等那种模型更好？</strong></p>
+<p>一个比较客观的方法是计算相关系数，也称为$R^2$值，可以通过调用 Numpy 库中 <code>corrcoef(yHat, y, rowvar = 0)</code>来求解</p>
 
       
     </div>
@@ -373,7 +402,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+            <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
           
         </div>
       
@@ -386,8 +415,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/02/hexo更换默认主题之nexT/" rel="next" title="hexo更换默认主题之nexT">
-                <i class="fa fa-chevron-left"></i> hexo更换默认主题之nexT
+              <a href="/2017/12/04/mechine-learning-in-action-Regression回归/" rel="next" title="mechine learning in action - Regression回归">
+                <i class="fa fa-chevron-left"></i> mechine learning in action - Regression回归
               </a>
             
           </div>
@@ -396,8 +425,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/12/02/ospf学习笔记/" rel="prev" title="ospf 学习笔记">
-                ospf 学习笔记 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/12/08/mechine-learning-in-action-K-Means-聚类/" rel="prev" title="mechine learning in action - K-Means 聚类">
+                mechine learning in action - K-Means 聚类 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -536,7 +565,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hadoop伪分布模式的搭建"><span class="nav-number">1.</span> <span class="nav-text">Hadoop伪分布模式的搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hadoop-eclipse的开发环境搭建"><span class="nav-number">2.</span> <span class="nav-text">Hadoop+eclipse的开发环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载插件"><span class="nav-number">2.1.</span> <span class="nav-text">下载插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插件安装"><span class="nav-number">2.2.</span> <span class="nav-text">插件安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遇到的一个小坑坑"><span class="nav-number">2.3.</span> <span class="nav-text">遇到的一个小坑坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一些配置"><span class="nav-number">2.4.</span> <span class="nav-text">一些配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#回归树"><span class="nav-number">1.</span> <span class="nav-text">回归树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型树"><span class="nav-number">2.</span> <span class="nav-text">模型树</span></a></li></ol></div>
             
 
           </div>

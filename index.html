@@ -252,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/knn/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/08/mechine-learning-in-action-K-Means-聚类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="dwy">
@@ -271,7 +271,1411 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/12/02/knn/" itemprop="url">machine learning in action - knn</a></h1>
+                <a class="post-title-link" href="/2017/12/08/mechine-learning-in-action-K-Means-聚类/" itemprop="url">mechine learning in action - K-Means 聚类</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-08T15:01:10+08:00">
+                2017-12-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learnin/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learnin</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>聚类分析试图将相似对象归到同一簇中，k-Means 可以发现 k 个不同的簇，且每个簇的中心采用所含值得均值计算而成。</p>
+<p>相似这一这概念取决于所选择的相似度计算方法。有多种相似度计算的方式，需根据具体应用来选择。</p>
+<h2 id="k-Means-算法"><a href="#k-Means-算法" class="headerlink" title="k-Means 算法"></a>k-Means 算法</h2><p>首先随机确定 k 个初始点作为质心，然后将数据集中的每个点基于与质心距离最近的原则，分配到一个簇中。所有数据点都完成簇的分配后，每个簇更新为该簇所有点的平均值，来得到新的执行。</p>
+<p>若在簇分配的过程中，一旦有任何一个点分到不同于上次分到的簇中，就会造成簇的质心发生变化，这样就再开始新的一轮迭代，为每个点重新分配对应的簇。</p>
+<p>直到每个点分到的簇都不再变化，即质心稳定，就结束迭代</p>
+<p><strong>kMean 算法的输出是：</strong></p>
+<ul>
+<li>k 个质心</li>
+<li>每个数据点的簇分配结果，包括（分配到第几个簇，与质心距离的平方）</li>
+</ul>
+<p><strong>k-Means 存在的问题</strong></p>
+<p>k-Means 由于随机选择k个初始质心，有可能有使得算法收敛于局部最小值点，而不是全局最小值点。</p>
+<h3 id="使用后处理来提高聚类性能"><a href="#使用后处理来提高聚类性能" class="headerlink" title="使用后处理来提高聚类性能"></a>使用后处理来提高聚类性能</h3><p>在 K-Means 聚类中，簇的数目 k 是一个用户预先定义的参数，那么用户如何才能直到 k 的选择是否正确？如何才能直到生成的簇比较好？</p>
+<p>在包含簇分配结果的矩阵保存着每个点的误差，即该点到簇质心距离的平方。可由此来<strong>评价聚类质量的方法</strong>。</p>
+<ul>
+<li>一种用于度量聚类效果的指标是 SSE（Sum of Squared Error，平方误差和），SSE 越小，表示数据点越接近与它们的质心，聚类效果也越好。因为对误差去了平方，因此更重视那些远离中心的点。</li>
+</ul>
+<p><strong>降低 SSE 的方法：</strong></p>
+<ul>
+<li>增加簇的个数，但这违背了聚类的目标。</li>
+</ul>
+<p><strong>聚类的目标是在保持簇数目不变的情况下提高簇的质量，该如何提高？</strong></p>
+<p>对生成的簇进行后处理：</p>
+<ul>
+<li>一种方法是将具有最大 SSE 值得簇划分成两个簇。具体实现时，可以将最大簇包含的点过滤出来并在这些点上运行 k-均值算法，其中的 k 设为2。</li>
+<li>为了保持簇总数不变，可以将某两个簇合并。<strong>如何选出那两个簇进行合并？</strong>有两种可以量化的方法：<ul>
+<li><u>合并最近的质心</u>：通过计算所有质心之间的距离，然后合并距离最近的两个点来实现</li>
+<li><u>合并两个使得 SSE 增幅最小的质心</u>：需合并两个簇然后计算总 SSE值，必须在所有可能的两个簇上重复上述处理过程，直到找到合并最佳的两个簇为止</li>
+</ul>
+</li>
+</ul>
+<h2 id="二分-k-Means-算法"><a href="#二分-k-Means-算法" class="headerlink" title="二分 k-Means 算法"></a>二分 k-Means 算法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">将所有点看成一个簇，质心为所有点的均值</span><br><span class="line"></span><br><span class="line">当簇数目小于 k 时：</span><br><span class="line"></span><br><span class="line">	对每一个簇，计算总误差，</span><br><span class="line"></span><br><span class="line">		在给定的簇上面进行 k-Means 聚类（k=2）</span><br><span class="line"></span><br><span class="line">		计算将该簇一分为2后的总误差。</span><br><span class="line"></span><br><span class="line">	选择使得误差最小的那个簇进行划分操作</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/mechine-learning-in-action-tree-regression-树回归/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/06/mechine-learning-in-action-tree-regression-树回归/" itemprop="url">mechine learning in action - tree regression 树回归</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-06T11:03:04+08:00">
+                2017-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>数据集中常包含复杂的相互关系，使得输入数据和目标变量之间呈现非线性关系，很难使用全局线性模型来拟合。</p>
+<p>一种可行的方式是，将数据集切分成很多分容易建模的数据，然后利用线性回归技术来建模。如果切分后仍难以拟合线性模型就继续切分。这就是<strong>树回归的思想</strong>：用树形结构对复杂数据进行切分，然后用线性回归的方法在叶子节点进行预测。</p>
+<p><strong>ID3算法复习</strong></p>
+<p>在决策树中曾介绍过 ID3算法，其做法是每次选取当前最佳的特征来分割数据。并按照该特征所有可能的取值来切分。也就是说，如果一个特征有四种取值的话，那数据就会被切成四份。一旦按某个特征切分后，该特征在之后的算法执行过程中，将不再起作用，也就是说被消耗掉了。</p>
+<p>ID3存在的问题：</p>
+<ul>
+<li>有观点认为，这种切分方式过于迅速</li>
+<li>不能处理连续型数据。只有事先将连续型特征转换成离散型，才能使用 ID3算法</li>
+</ul>
+<p><strong>CART算法</strong></p>
+<p><strong>CART 使用二元切分</strong>来处理连续型变量。具体的处理方法是：如果特征值大于给定值，就走左子树；否则走右子树。</p>
+<p>对 CART 算法稍作修改，就能处理回归问题。在决策树中曾介绍采用香农熵来度量集合的无序程度。如果选用其他方式来代替香农熵，就可以使用树构建算法来完成回归。</p>
+<p><strong>有两种树结构：</strong></p>
+<ul>
+<li>回归树regression tree：每个叶节点包含单个值</li>
+<li>模型树model tree：每个叶节点包含一个线性方程</li>
+</ul>
+<h2 id="回归树"><a href="#回归树" class="headerlink" title="回归树"></a>回归树</h2><p><strong>如何计算连续型数值的混乱度：</strong></p>
+<p>有一种简单的方式：首先计算所有数据的均值，然后计算每条数据的值到均值的差值。为了正负同等看待，用绝对值或者平方值来代替上述差值，然后求和。即数据集的均方差*数据集样本的总个数</p>
+<p><strong>树剪枝技术：</strong></p>
+<p>一颗树如果节点过多，表明该节点可能对数据进行了过拟合。那么，<strong>如何判断是否发生了过拟合？</strong>可以采用交叉验证的方式来发现</p>
+<p>通过降低决策树的复杂度来避免过拟合的过程称为<strong>剪枝 pruning</strong>，剪枝分为两种，预剪枝和后剪枝</p>
+<ul>
+<li><strong>预剪枝prepruning</strong>：需要用户指定参数，在树的构建过程中就剪枝<ul>
+<li>预剪枝的问题在：有时用户常常不确定到底要什么样的效果来设定参数</li>
+<li>使用预剪枝的方法是：在建树时，就设定一些剪枝条件，提前结束递归建树的过程</li>
+</ul>
+</li>
+<li><strong>后剪枝postpruning</strong>：不需要用户指定参数，利用测试集，在树构建完毕后再进行剪枝<ul>
+<li>后剪枝的问题在：效率没有预剪枝高</li>
+<li>使用后剪枝的方法是：将数据集分成测试集和训练集，使得构建出的树足够大，足够复杂，便于剪枝。接下来，从上而下找到叶子节点，用测试集来判断这些叶节点的合并是否能降低测试误差</li>
+</ul>
+</li>
+<li>一般为了寻求最佳模型效果，可以同时使用两种剪枝技术</li>
+</ul>
+<p><strong>进一步明确<u>后剪枝</u>的方法：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">基于已有的树切分测试数据：</span><br><span class="line">	如果存在任意一子集是一颗树，就在该子集上递归剪枝过程</span><br><span class="line">	计算当前两叶子节点合并后的误差</span><br><span class="line">	计算不合并的误差</span><br><span class="line">	如果合并会降低误差的话，就将叶节点合并</span><br></pre></td></tr></table></figure>
+<h2 id="模型树"><a href="#模型树" class="headerlink" title="模型树"></a>模型树</h2><p>用树来对数据建模，除了把叶节点简单的设定为常数值之外，还有一种方法是把叶节点设定为分段线性函数。</p>
+<p>这里所谓的分段线性函数是指模型由多个线性片段组成。模型树的可解释性是它由于回归树的特点之一。</p>
+<p><strong>为了找最佳切分，怎么计算误差？</strong></p>
+<p>与回归树不同，对于给定数据，应该先用线性模型对他进行拟合，然后计算真实的目标值与模型预测值之间的差值。最后将这些差值的平方求和就得到了所需的误差</p>
+<p><strong>如何评价模型树、回归树、线性回归及岭回归、Lasso 等那种模型更好？</strong></p>
+<p>一个比较客观的方法是计算相关系数，也称为$R^2$值，可以通过调用 Numpy 库中 <code>corrcoef(yHat, y, rowvar = 0)</code>来求解</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/04/mechine-learning-in-action-Regression回归/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/04/mechine-learning-in-action-Regression回归/" itemprop="url">mechine learning in action - Regression回归</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-04T09:36:30+08:00">
+                2017-12-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>回归方程 regression equation</li>
+<li>回归系数 regression weight</li>
+</ul>
+<p>求回归系数的过程就是回归。一旦有了回归系数，再给定输入，用回归系数诚意输入值，将结果加在一起，就得到了预测值。</p>
+<ul>
+<li>线性回归 linear regression：意味着可以将输入项乘以一些系数，在将结果加起来得到结果。</li>
+<li>非线性回归：认为输出结果有可能是输入的乘积项，多次项等的组合</li>
+</ul>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><p>如何从一大堆数据里求出回归方程？$Y=X^T\theta$，现在有一些 $X$和对应的$Y$，怎样才能找到$\theta$？</p>
+<h3 id="普通最小二乘法"><a href="#普通最小二乘法" class="headerlink" title="普通最小二乘法"></a>普通最小二乘法</h3><p>一个常用的方法是找出使误差最小的$\theta$，这里的误差是指预测$y$值和真实$y$值之间的差值。<u>如果简单相加，正差值和负差值将相互抵消</u>，所以可以采用<strong>平方误差</strong>。这个方法叫做 OLS 普通最小二乘法 ordinary least squares</p>
+<p>$$min(\sum_{i=1}^{m}(y_i-x_i^T\theta)^2)$$</p>
+<p>通过<a href="http://blog.csdn.net/fleurdalis/article/details/54931721" target="_blank" rel="noopener">数学推导</a>，核心思想是在导数等于0处可以取到极(小)值，故将平方误差写出来，另其导数等于0，就可以算出$\hat{\theta}$的计算公式，使用“帽”符号表示其仅是$w$的最佳估计。</p>
+<p>$$ \hat{\theta} = (X^TX)^{-1}X^Ty $$</p>
+<p>注意上述公式需要对矩阵求逆，因此<strong>此方程只在逆矩阵存在的时候适用</strong>，即线性无关的样本数需要多于特征数。</p>
+<p><strong>行列式非零</strong>$\Leftrightarrow$<strong>矩阵可逆</strong>，故对是否存在逆矩阵可通过行列式是否等于0来判断</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> np.linalg.det(xTx) == <span class="number">0.0</span>:</span><br><span class="line">  <span class="keyword">print</span> <span class="string">"This matrix is singular, cannot do inverse"</span></span><br><span class="line">  <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
+<p>回归曲线：</p>
+<p><img src="/2017/12/04/mechine-learning-in-action-Regression回归/linearRegression.png" alt="aaa"></p>
+<h3 id="局部加权线性回归"><a href="#局部加权线性回归" class="headerlink" title="局部加权线性回归"></a>局部加权线性回归</h3><p>线性回归的一个问题是可能出<strong>现欠拟合现象</strong>，因为它求得是具有最小寻访误差的无偏估计。所以有一些方法允许在估计中引入一些偏差，从而降低预测的均方误差。关于这个的理解，<a href="">参考</a></p>
+<p>其中一个方法是局部加权线性回归（Locally Weighted Linear Regression，LWLR），其<strong>核心思想是：给待预测的每个点附近的每个点赋予一定的权重</strong>$W$，$W$是一个矩阵，用来<strong>基于和待遇测点之间的距离</strong>给每个样本数据点赋予权重最小化目标是：</p>
+<p>$$min(\sum<em>{i=1}^{m}w</em>{i,i}(y_i-x_i^T\theta)^2)$$</p>
+<p>然后与最小二乘法类似，通过导数为0的方式<a href="http://lib.csdn.net/article/machinelearning/35178" target="_blank" rel="noopener">推导</a>，结果是：</p>
+<p>$$ \hat{\theta} = (X^TWX)^{-1}X^TWy $$</p>
+<p>同样需要注意能否求出逆矩阵这一问题。</p>
+<p><strong>LWLR 使用“核”来给附近的点赋予更高的权重，核的类型可以自由选择</strong>，最常用的核是高斯核，高斯核对应的权重如下：</p>
+<p>$$ W(i,i) = exp\lgroup \frac{\lvert x^{(i)}-x\rvert}{-2k^2}\rgroup$$</p>
+<p>这样就构建了只含对角元素的矩阵$W$,且点 $x$与$x^{(i)}$越近，$W(i,i)$越大。上述公式包含了一个需要用户指定的<strong>参数 $k$，它决定了对附近的点赋予多大的权重，也是使用 LWLR 时唯一需要考虑的参数。</strong></p>
+<p>参数 k 的影响：</p>
+<p><img src="/2017/12/04/mechine-learning-in-action-Regression回归/高斯核_k.png" alt="高斯核_k"></p>
+<ul>
+<li>k越小，越关注于局部的点，与训练集拟合的越好，但更趋于过拟合，对新数据不一定能达到最好的拟合效果</li>
+<li>k越大，则越趋于最小二乘法的线性回归，容易欠拟合</li>
+<li>通过调节 k，找到比较合理的拟合方式</li>
+</ul>
+<p>拟合结果：</p>
+<p><img src="/2017/12/04/mechine-learning-in-action-Regression回归/局部线性加权.png" alt="局部线性加权"></p>
+<p>局部线性加权也存在一个问题：<strong>增加了计算量！</strong>因为它对每个点做预测时都必须使用整个数据集。同时，为了做出预测，必须保存所有的训练数据。由拟合结果看 k=0.01的时候得到了较好的估计，在参数 k 的影响中可以看到，k=0.01时，大部分数据点的权重都为0</p>
+<p>如果避免这些计算，将减少程序运行的时间，从而缓解因计算量增加带来的问题</p>
+<h3 id="缩减shrinkage"><a href="#缩减shrinkage" class="headerlink" title="缩减shrinkage"></a>缩减shrinkage</h3><p>通过引入对参数的一些约束，减少不重要的参数，这个技术在统计学中缩减。缩减法能够去掉不重要的参数，因此可以更好地理解数据。此外，与简单线性回归相比，缩减法能取得更好的预测效果。</p>
+<p>在使用缩减法时，需要对特征做标准化处理</p>
+<h4 id="岭回归"><a href="#岭回归" class="headerlink" title="岭回归"></a>岭回归</h4><p>如果样本数据的特征比样本点还多，则之前的线性回归和局部线性加权回归方法均无法工作。因为$n&gt;m$,即输入数据举证不是满秩矩阵，无法求逆。由此引入<strong>岭回归</strong>的概念。</p>
+<p>岭回归最先用来处理特征数多于样本数的情况，现在也用在在估计中加入偏差，从而得到更好的估计。</p>
+<p>岭回归在矩阵$X^TX$上加入一个$\lambda I$，从而使得矩阵非奇异，可以求逆，$\lambda$是用户自定的数值，然后回归系数的公式就变为：</p>
+<p>$$ \hat{\theta} = (X^TX + \lambda I)^{-1}X^Ty $$</p>
+<p>可以通过<a href="">推导</a>，证明引入$\lambda$，相当于在普通最小二乘法的基础上增加以下约束：</p>
+<p>$$\sum_{k=1}^{n}{\theta_k^2}\le\lambda$$</p>
+<p>使用普通的最小二乘法在两个或更多特征相关时，可能会得出一个很大的正系数和一个很大的复习书。这一约束，就限制了岭回归会对比较大的系数进行惩罚，从而抑制了这个问题。</p>
+<h3 id="lasso"><a href="#lasso" class="headerlink" title="lasso"></a>lasso</h3><p>增加的约束为：</p>
+<p>$$\sum_{k=1}^{n}{\lvert \theta_k\rvert}\le\lambda$$</p>
+<p>在这个约束下，解出回归系数，需要二次规划算法，大大增加了计算复杂度</p>
+<h3 id="向前逐步回归"><a href="#向前逐步回归" class="headerlink" title="向前逐步回归"></a>向前逐步回归</h3><p>向前逐步算法可以得到和 lasso 法差不多的效果，但实现更加简单</p>
+<h2 id="权衡偏差和方差"><a href="#权衡偏差和方差" class="headerlink" title="权衡偏差和方差"></a>权衡偏差和方差</h2><p>在机器学习中，我们用训练数据集去训练(学习)一个model模型，通常的做法是定义一个误差函数Loss function，通过将这个Loss(或者叫error)的最小化过程，来提高模型的性能(performance)</p>
+<p>然而我们学习一个模型的目的是为了解决实际的问题(或者说是训练数据集这个领域中的一般化问题)，单纯地将训练数据集的loss最小化，并不能保证在解决更一般的问题时模型仍然是最优，甚至不能保证模型是可用的。</p>
+<p>这个训练数据集的loss与一般化的数据集的loss之间的差异就叫做generalization error。<a href="https://www.zhihu.com/question/27068705/answer/82132134" target="_blank" rel="noopener">参考</a></p>
+<p>而<strong>generalization error又可以细分为Bias和Variance两个部分。</strong>首先如果我们能够获得<strong>所有可能</strong>的数据集合，并在这个数据集合上将loss最小化，这样学习到的模型就可以称之为“<strong>真实模型</strong>”，当然，我们是无论如何都不能获得并训练所有可能的数据的，所以“真实模型”<strong>肯定存在，但无法获得</strong>，我们的最终目标就是去学习一个模型使其更加接近这个真实模型。</p>
+<p>而bias和variance分别从两个方面来描述了我们学习到的模型与真实模型之间的差距。</p>
+<ul>
+<li>Bias是 “用<strong>所有可能的</strong>训练数据集训练出的<strong>所有模型</strong>的输出的<strong>平均值</strong>” 与 “真实模型”的输出值之间的差异<ul>
+<li>也就是模型无法表示基本数据的复杂度——欠拟合</li>
+</ul>
+</li>
+<li>Variance则是“<strong>不同的训练数据集</strong>训练出的模型”的输出值<strong>之间</strong>的差异<ul>
+<li>也就是模型过于贴近训练数据——过拟合</li>
+<li>如果从一个数据集中取一个随机样本集，并用线性模型拟合，将会得到一组回归系数。同理，再取出另一组随机样本集并拟合，将会得到另一组回归系数。这些系数之间的差异大小也就是模型方差的反映。</li>
+</ul>
+</li>
+</ul>
+<p><strong>换句话说：</strong></p>
+<p>我们训练一个模型的最终目的，是为了让这个模型在测试数据上拟合效果好，也就是$Err_{test}$比较小，但在实际问题中，test data 我们是拿不到的，也根本不知道 test data 的内在规律，所有该怎么办?</p>
+<p>分两步：</p>
+<ol>
+<li>让$Err_{train}$尽可能小</li>
+<li>让$Err<em>{train}$尽可能等于$Err</em>{test}$</li>
+</ol>
+<p>为了达到第一步：把模型复杂化，参数弄的多多的，更好的贴近训练数据→ low bias </p>
+<p>为了达到第二步：把模型简单化，减少不必要的参数，使模型更具有通用性，而不是只对训练数据铭感 → low variance</p>
+<p>最终要找到：</p>
+<p><img src="/2017/12/04/mechine-learning-in-action-Regression回归/variance_bias.png" alt="varianca_bias"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在回归方程里，求得特征对应的最佳回归系数的方法是最小化误差的平方和。给定输入矩阵$X$，如果$X^TX$的逆存在并且可以求得的话，回归法都可以直接使用。数据集计算出的回归方程并不一定意味着它是最佳的，可以<strong>使用预测值和原始值 y 得相关性来度量回归方程的好坏</strong>。</p>
+<p>当数据的样本数比特征数还少的时候，矩阵$X^TX$的逆不能直接计算。这时可以考虑使用岭回归，为当$X^TX$的逆不能计算是，它仍能保证能求得回归参数。</p>
+<p>岭回归是缩减法的一种，相当于对回归系数的大小施加限制，另一种很好的缩减法是 lasso。Lasso 难以求解，但可以使用计算简便的逐步线性回归方法来求得近似结果。</p>
+<p>缩减法还可以看做是对一个模型增加偏差的同时，减少方差。偏差方差折中是一个重要的概念。</p>
+<p>当预测值和特征之间是非线性关系时，使用线性模型就很难拟合，可以使用数结构来进行预测。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/03/mechine-learning-in-action-Adaboost/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/03/mechine-learning-in-action-Adaboost/" itemprop="url">mechine learning in action - Adaboost</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-03T10:08:40+08:00">
+                2017-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>元算法 meta-algorithm或者集成方法 ensemble method是对其他算法进行组合的方式。核心思想是将若干弱分类器组合之后产生一个强分类器。弱分类器（weak learner）指那些分类准确率只稍好于随机猜测的分类器（error rate &lt; 50%）。<br>集成算法成功的关键在于能保证弱分类器的<strong>多样性（diversity）</strong>。集成不稳定的学习算法能得到更明显的性能提升。</p>
+<p>使用集成方法有多种形式：</p>
+<ul>
+<li>可以是不同算法的集成</li>
+<li>也可以是同一算法不同参数下的集成</li>
+<li>还可以是数据集不同部分给不同分类器之后的集成</li>
+</ul>
+<p>接下来，介绍同一种分类器不同实例的两种计算方法</p>
+<h2 id="bagging"><a href="#bagging" class="headerlink" title="bagging"></a>bagging</h2><p>bagging也叫自举汇聚法（bootstrap aggregating），是一种在原始数据集上通过有放回抽样重新选出S个新数据集来训练分类器的集成技术。也就是说这些新数据集是允许重复的。<br>在 S个数据集建好了以后，将某个学习算法分别作用于每个数据集，就得到了 S个分类器。当我们要对新数据进行分类时，就可以使用这 S 个分类器，用多数投票确定结果。</p>
+<p>bagging的代表是Random Forest随机森林 </p>
+<h2 id="boosting"><a href="#boosting" class="headerlink" title="boosting"></a>boosting</h2><p>boosting 是一种和 bagging 很类似的技术。不论实在 boosting 还是 bagging 中，所使用的分类器的类型都是一致的。但在 boosting 中，分类器迭代中串行地产生的。训练时着重关注训练集中那些不容易区分的样本。</p>
+<p>boosting 分类的结果是基于所有分类器的加权求和的结果，每个分类器的权重是其在训练过程中的成功度。而 bagging 则是等权重的。</p>
+<p>boosting的代表是 Adaboost，Adaboost方法相对于大多数其它学习算法而言，不会很容易出现过拟合现象</p>
+<h3 id="Adaboost"><a href="#Adaboost" class="headerlink" title="Adaboost"></a>Adaboost</h3><p>Adaboost 是最流行的一种 boosting 方法。其运行过程如下：</p>
+<ul>
+<li><p>训练<strong>数据集种的每个样本都有一个权重值</strong>，这些权重构成了向量 D，一开始，所有样本的权重都初始化为相同值</p>
+</li>
+<li><p>首先在训练数据上训练出一个弱分类器(+1,-1二分类)，并计算该分类器的错误率$\varepsilon$,然后再同一数据集上再次练弱分类器</p>
+</li>
+<li><p>为了从所有弱分类器中得到最终的分类结果，Adaboost<strong>为每个分类器分配了一个权重值$\alpha$</strong><br>$$<br>\alpha = \frac{1}{2}ln(\frac{1-\varepsilon}{\varepsilon})<br>$$</p>
+</li>
+<li><p>在分类器的第二次训练中，会重新调整每个样本的权重</p>
+<ul>
+<li>第一次分对的样本权重对降低</li>
+</ul>
+<p>$$<br>D_i^{(t+1)}=\frac{D_i^{t}e^{-\alpha}}{Sum(D)}<br>$$</p>
+<p>​</p>
+<ul>
+<li>第一次分错的样本权重会提高</li>
+</ul>
+<p>$$<br>D_i^{(t+1)}=\frac{D_i^{t}e^{\alpha}}{Sum(D)}<br>$$</p>
+<p>​</p>
+</li>
+<li><p>即从弱分类器中计算出$\varepsilon$,然后算出$\alpha$,然后更新$D$,开始新一轮的迭代，知道训练错误率为0或者弱分类器的数目达到用户指定值为止</p>
+</li>
+<li><p>最后对分类结果的判定规则是：</p>
+</li>
+</ul>
+<p>$$H(x) = sign(\sum_{t=1}^{t}\alpha_th_t(x))$$</p>
+<p>$h_t(x)$表示第$t$次分类的结果（+1，-1），$sign()$函数的特点是，大于0输出1，小于0输出-1</p>
+<p><strong>结果权重值$\alpha$和样本权重调整$D_i$的公式推导：</strong></p>
+<p><strong>基于单层决策树构建弱分类器</strong></p>
+<p>单层决策树 decision stump，也称决策树桩，是一种简单的决策树。它仅基于一个特征来做决策。由于这棵树只有一次分裂过程，因此它实际上就是一个树桩。</p>
+<p>构建一个树桩，要从输入数据中找到一个最好的特征划分方式，由此分类。需要记下：</p>
+<ul>
+<li>分类的方法（划分的特征，划分的特征，是基于大于号的划分还是小于号的划分）</li>
+<li>分类的错误率（算分类器的权重和调整样本权重要用）</li>
+<li>分类的结果（调整样本权重要用）</li>
+</ul>
+<h2 id="Random-Forest随机森林"><a href="#Random-Forest随机森林" class="headerlink" title="Random Forest随机森林"></a>Random Forest随机森林</h2><p><a href="https://www.cnblogs.com/maybe2030/p/4585705.html" target="_blank" rel="noopener">参考</a>这个博客讲的很好</p>
+<p>每棵树的按照如下规则生成：</p>
+<ul>
+<li>如果训练集大小为N，对于每棵树而言，随机且有放回地从训练集中的抽取N个训练样本（这种采样方式称为bootstrap sample方法），作为该树的训练集；</li>
+</ul>
+<p>从这里我们可以知道：每棵树的训练集都是不同的，而且里面包含重复的训练样本（理解这点很重要）。</p>
+<p><strong>为什么要随机抽样训练集？（add @2016.05.28）</strong></p>
+<p>如果不进行随机抽样，每棵树的训练集都一样，那么最终训练出的树分类结果也是完全一样的，这样的话完全没有bagging的必要；</p>
+<p><strong>为什么要有放回地抽样？（add @2016.05.28）</strong></p>
+<p>如果不是有放回的抽样，那么每棵树的训练样本都是不同的，都是没有交集的，这样每棵树都是”有偏的”，都是绝对”片面的”（当然这样说可能不对），也就是说每棵树训练出来都是有很大的差异的；而随机森林最后分类取决于多棵树（弱分类器）的投票表决，这种表决应该是”求同”，因此使用完全不同的训练集来训练每棵树这样对最终分类结果是没有帮助的，这样无异于是”盲人摸象”。</p>
+<ul>
+<li>如果每个样本的特征维度为M，指定一个常数m&lt;&lt;M，随机地从M个特征中选取m个特征子集，每次树进行分裂时，从这m个特征中选择最优的。</li>
+</ul>
+<p><strong>随机森林分类效果（错误率）与两个因素有关：</strong></p>
+<ol>
+<li>森林中任意两棵树的相关性：相关性越大，错误率越大；</li>
+<li>森林中每棵树的分类能力：每棵树的分类能力越强，整个森林的错误率越低。</li>
+</ol>
+<p>减小特征选择个数m，树的相关性和分类能力也会相应的降低；增大m，两者也会随之增大。<u><strong>所以关键问题是如何选择最优的m（或者是范围），这也是随机森林唯一的一个参数</strong></u></p>
+<ul>
+<li>每棵树都尽最大程度的生长，并且没有剪枝过程【这里不太懂，为什么不减zhi】</li>
+</ul>
+<p><strong>袋外错误率 oob error</strong></p>
+<p>构建随机森林最关键的问题就是如何选择最优的 m，要解决这个问题主要依据计算袋外错误率 out-of-bag error</p>
+<p>随机森林的一个重要有点是，没有西药对它进行交叉验证或者用一个独立地测试集来获得一个误差的无偏估计。它可以在内部进行评估，也就是说在生产过程中，就可以对误差建立一个无偏估计。</p>
+<p>在构建每棵树时（假设对于第 k 棵树），存在部分训练实例没有参与第 k 棵树的生产，它们称为第 k棵树的 oob 样本：</p>
+<ol>
+<li>对每个样本，计算它作为 oob 样本的树对它的分类情况</li>
+<li>然后以简单多数投票作为该样本的分类结果</li>
+<li>最后以误分样本总数的比率作为随机森林的 oob 误分率</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/03/mechine-learning-in-action-SVM-支持向量机/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/03/mechine-learning-in-action-SVM-支持向量机/" itemprop="url">mechine learning in action - SVM 支持向量机</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-03T10:08:14+08:00">
+                2017-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/03/mechine-learning-in-action-Logistic-回归/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/03/mechine-learning-in-action-Logistic-回归/" itemprop="url">mechine learning in action - Logistic 回归</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-03T10:07:41+08:00">
+                2017-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>逻辑回归解决的是$0-1$分类问题。其本质是线性回归，只是在特征到结果的映射中加入了一层函数$\sigma(z)$映射，将结果映射为$0$和$1$。</p>
+<p><strong>存在这种性质的函数有：</strong></p>
+<ul>
+<li>海维赛德阶跃函数（单位阶跃函数），问题在于很对0到1的瞬间跳跃</li>
+<li><strong>Sigmoid 函数</strong>，存在类似单位阶跃函数的性质，在数学上更易于处理。sigmoid 函数$\sigma(z)$公式</li>
+</ul>
+<p>$$ \sigma(z) = \frac{1}{1+e^{-z}} $$</p>
+<p>当x 为0时，Sigmoid 函数值为0.5；随 x 增大，对应的Sigmoid 函数值逼近1；随 x 减小，对应的Sigmoid 函数值逼近0，如果尺度足够大，Sigmoid 看一起来很像一个阶跃函数。</p>
+<h2 id="Logistic-回归分类器概述"><a href="#Logistic-回归分类器概述" class="headerlink" title="Logistic 回归分类器概述"></a>Logistic 回归分类器概述</h2><p>为了实现 Logistic 回归分类器，可以在每一个特征上乘以回归系数，然后把所有结果值相加，将这个总和代入 Sigmoid 函数中，进而得到一个范围在0-1的数值，任何大于0.5的数值被分入1类，小于0.5的数值被归入0类。</p>
+<p>确定了分类器的函数形式之后，现在的问题变成了：<strong>每个特征之前最佳的回归系数是多少？</strong></p>
+<h3 id="基于最优化方法的最佳回归系数确定"><a href="#基于最优化方法的最佳回归系数确定" class="headerlink" title="基于最优化方法的最佳回归系数确定"></a>基于最优化方法的最佳回归系数确定</h3><p>Sigmoid 函数的输入记为$z$,由下面的公式得出：</p>
+<p>$$ z = w_0x_0+ w_1x_1+ w_2x_3+…+ w_nx_n  (x_0=1,w_0=b)$$</p>
+<p>$$ z=w^Tx$$</p>
+<p>向量$w$就是要找的最佳参数，为了找到最佳参数，需要采用一些最优化的理论知识</p>
+<h4 id="梯度下降算法"><a href="#梯度下降算法" class="headerlink" title="梯度下降算法"></a>梯度下降算法</h4><ul>
+<li><strong>批梯度下降法（Batch Gradient Descent） BGD</strong><ul>
+<li>有m个样本，这里求梯度的时候就<u>用了所有m个样本的梯度数据</u></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>随机梯度下降 （Stochastic Gradient Descent）SGD</strong><ul>
+<li>随机梯度下降法，和批量梯度下降法是两个极端，一个采用所有数据来梯度下降，一个<u>随机挑选用一个样本来梯度下降</u>。自然各自的优缺点都非常突出。<ul>
+<li>对于<strong>训练速度</strong>来说，随机梯度下降法由于每次仅仅随机采用一个样本来迭代，训练速度很快，而批量梯度下降法在样本量很大的时候，训练速度不能让人满意。</li>
+<li>对于<strong>准确度</strong>来说，随机梯度下降法用于仅仅用一个样本决定梯度方向，导致解很有可能不是最优。</li>
+<li>对于<strong>收敛速度</strong>来说，由于随机梯度下降法一次迭代一个样本，导致迭代方向变化很大，不能很快的收敛到局部最优解。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>小批量梯度下降（ Mini-batch Gradient Descent）MBGD</strong><ul>
+<li>那么，有没有一个中庸的办法能够结合两种方法的优点呢？有！这就是小批量梯度下降法。小批量梯度下降法是批量梯度下降法和随机梯度下降法的折衷，也就是对于m个样本，我们<u>采用x个样本来迭代</u>。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/03/mechine-learning-in-action-bayes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/03/mechine-learning-in-action-bayes/" itemprop="url">mechine learning in action - bayes</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-03T10:07:05+08:00">
+                2017-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/mechine-learning-in-action-decision-tree/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/02/mechine-learning-in-action-decision-tree/" itemprop="url">mechine learning in action - decision tree</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-02T09:54:54+08:00">
+                2017-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>上一次介绍了 knn，knn可以完成很多分类任务，但其最大的缺点在于无法出数据的内在含义。决策树的主要优势在于数据形式非常容易理解。</p>
+<p>决策树根据一些 feature 进行分类。每个节点提一个问题，通过判断，将数据分类（可以是两类或多类），再继续提问。<strong>这些问题是根据已有数据学习出来的</strong>，再投入新数据的时候，就可以根据这棵树上的问题，将数据划分到合适的叶子上。</p>
+<h2 id="决策树算法概述"><a href="#决策树算法概述" class="headerlink" title="决策树算法概述"></a>决策树算法概述</h2><ul>
+<li>构造决策树的第一个问题在于：<strong>如何构造每个节点提出的问题，来划分数据？</strong>通常的做法是：通过数据集的特征来划分数据。</li>
+<li>那么下一个问题在于：<strong>当前数据集上哪些特征在划分数据分类时，会起到决定性作用？</strong>为了找到决定性特征，划分出最好的结果，我们必须评估每个特征</li>
+<li>完成评估后，基于所选出的特征，原始数据集就被划分为几个数据子集。这些数据子集分布在第一个决策点的所有分支上</li>
+<li>如果某个分支下的数据属于同一类，就无需对数据集进行进一步分割了</li>
+<li>如果某个分之下的数据集不属于同一类，则重复上述划分数据子集的过程。</li>
+</ul>
+<p><strong>由此问题的核心在于：如何划分数据集</strong></p>
+<ul>
+<li>一些决策树算法采用二分法划分数据，产生两个分支。</li>
+<li>也可能分成多个分支。如：某个属性可能会产生四个可能的值，就把数据划分成4块，创建四个不同的分支。</li>
+</ul>
+<p>划分数据集的方法有：<u>ID3</u>，<u>C4.5</u>，<u>CART</u>等，处理如何划分数据集，合适停止划分数据集。</p>
+<p>本次主要介绍 ID3算法。</p>
+<h3 id="ID3算法对决策树划分数据集"><a href="#ID3算法对决策树划分数据集" class="headerlink" title="ID3算法对决策树划分数据集"></a>ID3算法对决策树划分数据集</h3><p>假定每次划分数据集时，只选取一个特征属性，如果训练集中存在20个属性，该选择20个属性中哪一个。</p>
+<p>ID3算法的核心思想在于：选择<strong>信息熵增益最大</strong>的属性作为数据集分类的依据</p>
+<blockquote>
+<p><strong>信息增益：</strong>在划分数据集前后，信息发生生的变化称为信息增益；</p>
+</blockquote>
+<p><strong>如何计算信息增益：</strong></p>
+<p>计算信息增益，本质就是计算分类前的信息熵，和分类后的信息熵，两者之差就是信息增益。</p>
+<p><strong>熵$H$的计算公式：</strong> </p>
+<p>$$I(x_i)=-\log_2p(x_i)​$$</p>
+<p>$$H=-\sum_{i=1}^kp(x_i)\log_2p(x_i)$$</p>
+<p> 熵$H$的本质是信息量$I$的期望值，$i$从$1$到$k$代表事件最终的结果$k$种可能。信息增益，其实就是信息熵的差值。</p>
+<p>熵度量的是事物的无序程度，无序程度越大，熵越大。由此，分类后的信息熵减少，说明分类变得更为有序了。两者之差越大，说明分类效果越好。故：获得信息增益最高的特性就是最好选择。</p>
+<blockquote>
+<p>另一种度量集合无序程度的方法是基尼不纯度 Gini impurity，简单的说就是从一个数据集中随机的选取子项，度量其被错误分到其他分组里的概率</p>
+</blockquote>
+<p><strong>递归构建决策树：</strong></p>
+<p>递归结束的条件是：程序遍历完所有划分数据集的属性，或者每个分支下的所有实例都具有相同的分类。</p>
+<ul>
+<li>如果所有实例具有相同的分类，则得到一个叶子节点（终止块），任何到达叶子节点节点的数据必然属于叶子节点的分类</li>
+<li>如果数据集已经处理了所有特征，但标签依然不是唯一的，通常采用多数表决的方式定义该叶子节点的分类<ul>
+<li><strong>在划分分组时会消耗特征</strong>，所以到最后没有特征了，就说明数据集把所有特征都处理过了</li>
+</ul>
+</li>
+</ul>
+<p>ID3算法无法处理数值型数据</p>
+<h2 id="测试和存储决策树"><a href="#测试和存储决策树" class="headerlink" title="测试和存储决策树"></a>测试和存储决策树</h2><p>构造决策树是很耗时的任务，即使处理很小的数据集，也要花费几秒的时间；如果数据集比较大，就会耗费很多时间。使用创建好的决策树来解决分类问题，就可以很快完成分类</p>
+<p>因此，为了节省时间，最好能在每次执行分类时，调用已经构造好的决策树。</p>
+<p>python 模块 pickle 序列化对象，序列化对象可以在磁盘上保存对象，在需要的时候读取出来。任何对象都可以序列化操作。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>to be done ……</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>决策树可能会产生过度匹配数据集的问题，可以通过剪裁决策树，合并相邻的无法产生大量信息增益的节点，来消除过度匹配问题。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/mechine-learning-in-action-decision-knn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dwy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dwy's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/02/mechine-learning-in-action-decision-knn/" itemprop="url">machine learning in action - knn</a></h1>
         
 
         <div class="post-meta">
@@ -293,6 +1697,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">machine learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -343,6 +1769,7 @@
 <li><p>由此，<strong>在处理不同取值范围的特征值时，通常采用的方法是将数值归一化</strong>。如取值范围处理为[0,1]或者[-1,1]之间。以下公式可以将任意范围的特征值转换为[0,1]区间：<br>  $$<br>  newValue = (oldValue - min)/(max - min)<br>  $$</p>
 </li>
 </ul>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>to be done</p>
 <h2 id="knn-总结"><a href="#knn-总结" class="headerlink" title="knn 总结"></a>knn 总结</h2><p><strong>缺点：</strong></p>
 <ul>
 <li>knn 邻近算法必须保存全部数据集，如果训练数据集很大，必须使用<strong>大量的存储空间</strong>。</li>
@@ -671,494 +2098,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/Mac环境下hadoop-eclipse开发环境的搭建/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="dwy">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dwy's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/02/Mac环境下hadoop-eclipse开发环境的搭建/" itemprop="url">Mac环境下hadoop+eclipse开发环境的搭建</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-02T09:21:11+08:00">
-                2017-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Hadoop伪分布模式的搭建"><a href="#Hadoop伪分布模式的搭建" class="headerlink" title="Hadoop伪分布模式的搭建"></a>Hadoop伪分布模式的搭建</h2><p>因为要做毕设，所以要在自己的电脑上搭建一个Hadoop的开发环境</p>
-<p>我主要参考了以下博客，<a href="http://www.cnblogs.com/micrari/p/5716851.html" target="_blank" rel="noopener">click here</a> 完成了快速搭建</p>
-<h2 id="Hadoop-eclipse的开发环境搭建"><a href="#Hadoop-eclipse的开发环境搭建" class="headerlink" title="Hadoop+eclipse的开发环境搭建"></a>Hadoop+eclipse的开发环境搭建</h2><h3 id="下载插件"><a href="#下载插件" class="headerlink" title="下载插件"></a>下载插件</h3><p><a href="https://github.com/winghc/hadoop2x-eclipse-plugin/tree/master/release" target="_blank" rel="noopener">下载地址</a></p>
-<h3 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h3><p>把<code>hadoop-eclipse-plugin-2.6.0.jar</code>这个插件下载下来</p>
-<p>放到以下目录下<code>/Applications/Eclipse.app/Contents/Eclipse/plugins</code></p>
-<p>以上目录有可能不一样，只要找到eclipse的安装目录的<code>plugins</code>目录即可</p>
-<p>然后重新打开eclipse即可</p>
-<h3 id="遇到的一个小坑坑"><a href="#遇到的一个小坑坑" class="headerlink" title="遇到的一个小坑坑"></a>遇到的一个小坑坑</h3><p>我重启eclipse发现什么都没有变化，好像eclipse插件没有起到任何作用。</p>
-<p>一直以为会不会是hadoop版本和插件版本不一致所造成的</p>
-<p>最后发现：是因为之前启动过eclipse，然后下次启动好像会从历史记录中加载，而不检查有没有新的的插件被安装。</p>
-<p>解决：<br>把存历史记录的那个目录删掉。启动的时候找不到历史记录，就会全部重新加载拉～～～～删掉没有关系啦，启动会自动生成的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Applications/Eclipse.app/Contents/Eclipse/configuration</span><br><span class="line">$ ls</span><br><span class="line">config.ini                             org.eclipse.e4.ui.css.swt.theme        org.eclipse.equinox.simpleconfigurator org.eclipse.osgi                       org.eclipse.update</span><br><span class="line">org.eclipse.core.runtime               org.eclipse.equinox.app                org.eclipse.oomph.setup                org.eclipse.ui.intro.universal</span><br><span class="line">$ rm -r org.eclipse.update/</span><br></pre></td></tr></table></figure>
-<h3 id="一些配置"><a href="#一些配置" class="headerlink" title="一些配置"></a>一些配置</h3><p><a href="http://blog.csdn.net/antgan/article/details/52068161" target="_blank" rel="noopener">参考这里</a> </p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我也不太懂呀，记录一下自己的搭建过程，可以方便以后寄几看～～～</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/hexo更换默认主题之nexT/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="dwy">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dwy's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/02/hexo更换默认主题之nexT/" itemprop="url">hexo更换默认主题之nexT</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-02T09:17:07+08:00">
-                2017-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>刚刚搭建好个人博客是不是炒鸡开心捏◉‿◉</p>
-<p>然而默认的theme好像有一丢丢丑捏，可以把它换掉咩？当然可以啦(*≧ω≦)</p>
-<h2 id="hexo主题选择"><a href="#hexo主题选择" class="headerlink" title="hexo主题选择"></a>hexo主题选择</h2><p>百度一下可以搜到很多好看的主题呢，挑自己喜欢的style就好</p>
-<p>懒人党可以<a href="http://www.jianshu.com/p/b6c694c2e58e" target="_blank" rel="noopener">click here</a></p>
-<p>宝宝选的是nexT这个主题，感觉蛮干净清爽的</p>
-<h2 id="nexT主题安装"><a href="#nexT主题安装" class="headerlink" title="nexT主题安装"></a>nexT主题安装</h2><p>非常简单，按照git里面的步骤，照着敲就好啦！别的主题的步骤也都是这样的。</p>
-<p>这边给一个比较详细的文档，宝宝就是照着这个敲的<a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">click here</a></p>
-<p>Hexo 安装主题的方式非常简单，只需要将主题文件拷贝至站点目录的 themes 目录下， 然后修改下配置文件即可。具体到 NexT 来说，安装步骤如下。</p>
-<h3 id="下载主题"><a href="#下载主题" class="headerlink" title="下载主题"></a>下载主题</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> your-hexo-site</span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
-<p>之后的更新可以通过 git pull 来快速更新</p>
-<h3 id="启用主题"><a href="#启用主题" class="headerlink" title="启用主题"></a>启用主题</h3><p>与所有 Hexo 主题启用的模式一样。 当下载完成后，打开<code>your-hexo-site</code>目录下面的<code>_config.yml</code>文件， 找到 theme 字段，并将其值更改为 next</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure>
-<h3 id="验证主题"><a href="#验证主题" class="headerlink" title="验证主题"></a>验证主题</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>用浏览器打开<code>localhost:4000</code>，就可以看到新主题啦 (⁎⁍̴̛ᴗ⁍̴̛⁎)</p>
-<h3 id="修改主题的一些设定"><a href="#修改主题的一些设定" class="headerlink" title="修改主题的一些设定"></a>修改主题的一些设定</h3><p>按自己的需求改，怎么美怎么改，前面的文档非常详细。</p>
-<p>配置文件的路径 <code>your-hexo-site/theme/next/_config.yml</code></p>
-<p>宝宝就列一下自己改的：</p>
-<h4 id="设置Scheme"><a href="#设置Scheme" class="headerlink" title="设置Scheme"></a>设置Scheme</h4><p>有三种scheme可以挑</p>
-<ul>
-<li>Muse - 默认 Scheme，这是 NexT 最初的版本，黑白主调，大量留白</li>
-<li>Mist - Muse 的紧凑版本，整洁有序的单栏外观</li>
-<li>Pisces - 双栏 Scheme，小家碧玉似的清新</li>
-</ul>
-<p>宝宝用的是Pisces，觉得这个更舒服一点</p>
-<h4 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h4><ul>
-<li>找一张美美的照片存下来</li>
-<li>保存到<code>your-hexo-site/theme/next/source/images</code>文件夹下</li>
-<li>修改头像文件名为avatar.png （不改也可以，配置文件中名字能对起来就好）</li>
-<li>修改之前的主题的配置文件<code>your-hexo-site/theme/next/_config.yml</code></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">avatar: /images/avatar.png</span><br></pre></td></tr></table></figure>
-<h4 id="设置manu"><a href="#设置manu" class="headerlink" title="设置manu"></a>设置manu</h4><p>menu就是侧边的菜单栏，可以按照自己想要的进行设置</p>
-<ul>
-<li>home: 首页</li>
-<li>archives: 归档</li>
-<li>categories: 分类</li>
-<li>tags: 标签</li>
-<li>about: 关于</li>
-<li>search: 搜索</li>
-<li>commonweal: 公益404</li>
-<li>something: 有料</li>
-</ul>
-<p>宝宝设置了 home archives tags categories 这四项</p>
-<p>具体设置也是配置那个主题配置文件中的menu选项</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: /</span><br><span class="line">  archives: /archives</span><br><span class="line">  #about: /about</span><br><span class="line">  categories: /categories</span><br><span class="line">  tags: /tags</span><br><span class="line">  #commonweal: /404.html</span><br></pre></td></tr></table></figure>
-<p>home archives 设置完了非常的完美，没有什么问题</p>
-<h3 id="tags-和-categories出现404"><a href="#tags-和-categories出现404" class="headerlink" title="tags 和 categories出现404"></a>tags 和 categories出现404</h3><p><strong>tags 和 categories可能会出现404</strong>，要稍微调整一下下 <a href="http://theme-next.iissnan.com/theme-settings.html#tags-page" target="_blank" rel="noopener">参考这边可以完美解决</a></p>
-<p>写博客果然好考验耐心，宝宝就不粘贴上面文档的解决方案了，大家自己点进去哦 (*≧ω≦)</p>
-<h3 id="开启评论功能"><a href="#开启评论功能" class="headerlink" title="开启评论功能"></a>开启评论功能</h3><p><a href="http://theme-next.iissnan.com/getting-started.html#comment-system-duoshuo" target="_blank" rel="noopener">here</a> 这里是解决方案</p>
-<p>nexT集成了duoshuo第三方服务，<a href="http://duoshuo.com/" target="_blank" rel="noopener"> duoshuo传送门</a></p>
-<p>进到多说的主页，点击我要安装，填完注册信息后，把第三行多说域名框框里面的内容，填到配置文件里面就可以啦</p>
-<h3 id="开启阅读量统计功能"><a href="#开启阅读量统计功能" class="headerlink" title="开启阅读量统计功能"></a>开启阅读量统计功能</h3><p><a href="https://notes.wanghao.work/2015-10-21-%E4%B8%BANexT%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E9%87%8F%E7%BB%9F%E8%AE%A1%E5%8A%9F%E8%83%BD.html#%E9%85%8D%E7%BD%AELeanCloud" target="_blank" rel="noopener">here</a><br>完美解决</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>宝宝就改了这些配置，以后改了别的配置的话再慢慢补充。</p>
-<p>至少现在相对来说已经美美哒了呢，有兴趣的宝宝可以自己折腾，有比较好用的功能，欢迎留言给我哟，么么哒 ʕ •ᴥ•ʔ</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="dwy">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dwy's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/02/hello-world/" itemprop="url">hello-world</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-02T09:15:14+08:00">
-                2017-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="安装Xcode"><a href="#安装Xcode" class="headerlink" title="安装Xcode"></a>安装Xcode</h3><p>Hexo的编译可能依赖Xcode，从app store 直接下就好</p>
-<h3 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install node.js</span><br></pre></td></tr></table></figure>
-<p>没有安装 <a href="http://brew.sh/" target="_blank" rel="noopener">brew</a> 肿么办捏？</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /usr/bin/ruby -e <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></span><br></pre></td></tr></table></figure>
-<p>检验</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm -version</span><br></pre></td></tr></table></figure>
-<p>需要注意的是，Hexo 3.1.1测试的最低版本为0.12，所以安装的版本不要太旧</p>
-<h3 id="注册github账户"><a href="#注册github账户" class="headerlink" title="注册github账户"></a>注册github账户</h3><ul>
-<li>去<a href="https://github.com/" target="_blank" rel="noopener">git官网</a>注册git账号</li>
-<li>建立与你用户名对应的仓库，仓库名必须为<code>your_user_name.github.io</code></li>
-<li>配置SSH Keys</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen</span><br><span class="line">在 ~/.ssh目录下 会生成  id_rsa  id_rsa.pub 这两个文件</span><br><span class="line">复制 id_rsa.pub 文件下的公钥放倒git仓库下</span><br></pre></td></tr></table></figure>
-<p>就配置好啦 (⁎⁍̴̛ᴗ⁍̴̛⁎)</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="本地安装"><a href="#本地安装" class="headerlink" title="本地安装"></a>本地安装</h3><p>非常简单，按hexo git中给的步骤敲以下几个命令就好啦</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
-<p>这样就装好啦 ʕ •ᴥ•ʔ</p>
-<h3 id="装完立即试一试"><a href="#装完立即试一试" class="headerlink" title="装完立即试一试"></a>装完立即试一试</h3><h4 id="Setup-your-blog"><a href="#Setup-your-blog" class="headerlink" title="Setup your blog"></a>Setup your blog</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init blog</span><br><span class="line">$ <span class="built_in">cd</span> blog</span><br></pre></td></tr></table></figure>
-<h4 id="生成静态页面"><a href="#生成静态页面" class="headerlink" title="生成静态页面"></a>生成静态页面</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br><span class="line">or</span><br><span class="line">$ hexo g</span><br></pre></td></tr></table></figure>
-<h4 id="Start-the-server"><a href="#Start-the-server" class="headerlink" title="Start the server"></a>Start the server</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br><span class="line">or</span><br><span class="line">$ hexo s</span><br></pre></td></tr></table></figure>
-<p>打开浏览器，在<localhost:4000>可以看到生成的博客</localhost:4000></p>
-<p>平时写博客的时候就可以打开这个，看到实时写作的情况啦</p>
-<h3 id="安装git部署插件"><a href="#安装git部署插件" class="headerlink" title="安装git部署插件"></a>安装git部署插件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<h3 id="配置-config-yml-文件"><a href="#配置-config-yml-文件" class="headerlink" title="配置 _config.yml 文件"></a>配置 _config.yml 文件</h3><p>在Hexo安装的目录中找到 _config.yml 文件，打开文件最后，做如下修改并保存</p>
-<pre><code>deploy: 
-      type: git 
-      repo: https://github.com/用户名/用户名.github.io.git 
-</code></pre><p>这样就配置好了</p>
-<h3 id="git发布的页面在哪里"><a href="#git发布的页面在哪里" class="headerlink" title="git发布的页面在哪里"></a>git发布的页面在哪里</h3><p><code>https://用户名.github.io/</code></p>
-<p>在这个网址下就是我们搭建好的博客的主页面啦</p>
-<h2 id="可以开始写博客啦"><a href="#可以开始写博客啦" class="headerlink" title="可以开始写博客啦"></a>可以开始写博客啦</h2><h3 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">"文章标题"</span></span><br></pre></td></tr></table></figure>
-<p>在source目录下面能找到生成的 文章标题.md文件，编辑他就好</p>
-<h4 id="mark-down编辑器"><a href="#mark-down编辑器" class="headerlink" title="mark down编辑器"></a>mark down编辑器</h4><p>怎么编.md文件呢？博主用的是<strong>MacDown</strong>编辑的，这个可以一边编辑一边实时看到编写的效果</p>
-<h3 id="生成静态页面-1"><a href="#生成静态页面-1" class="headerlink" title="生成静态页面"></a>生成静态页面</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<h3 id="同步到git发布出去"><a href="#同步到git发布出去" class="headerlink" title="同步到git发布出去"></a>同步到git发布出去</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br><span class="line">or </span><br><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
-<h2 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h2><p>用github搭建好个人博客以后</p>
-<p>每次部署的步骤，可按以下三步来进行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1206,7 +2152,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1217,7 +2163,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1228,7 +2174,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
